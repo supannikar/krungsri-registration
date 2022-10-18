@@ -16,8 +16,8 @@ RESTFul API for registration a new user. It's including:
 ---
 
 ## Postman collection:
-> Collection: demo <br/>
-> Variable environment: 1234 <br/>
+> Collection: [krungsri postman collection](https://github.com/supannikar/krungsri-registration/blob/master/src/main/resources/Krungsri%20Registration.postman_collection.json) <br/>
+> Variable environment: [krungsri postman variable](https://github.com/supannikar/krungsri-registration/blob/master/src/main/resources/local-krungsri.postman_environment.json) <br/>
 ---
 
 ## Database setup
