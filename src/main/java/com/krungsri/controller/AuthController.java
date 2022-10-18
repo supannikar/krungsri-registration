@@ -1,5 +1,6 @@
 package com.krungsri.controller;
 
+import com.krungsri.exception.InvalidCredentialException;
 import com.krungsri.model.JwtTokenResponse;
 import com.krungsri.model.RegistrationRequest;
 import com.krungsri.model.RegistrationResponse;
@@ -10,10 +11,12 @@ import com.krungsri.service.RegistrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.logging.log4j.core.util.PasswordDecryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,13 +30,17 @@ public class AuthController {
     private final JwtTokenService jwtTokenService;
     private final JwtUserDetailService jwtUserDetailService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public AuthController(final RegistrationService registrationService,
                           final JwtTokenService jwtTokenService,
-                          final JwtUserDetailService jwtUserDetailService) {
+                          final JwtUserDetailService jwtUserDetailService,
+                          final PasswordEncoder passwordEncoder) {
         this.registrationService = registrationService;
         this.jwtTokenService = jwtTokenService;
         this.jwtUserDetailService = jwtUserDetailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @ApiOperation("Get JWT token.")
@@ -45,6 +52,9 @@ public class AuthController {
             @RequestBody AuthenticationRequest authenticationRequest) {
 
         var userDetail = jwtUserDetailService.loadUserByUsername(authenticationRequest.getUsername());
+        if (!passwordEncoder.matches(authenticationRequest.getPassword(), userDetail.getPassword())) {
+            throw new InvalidCredentialException(authenticationRequest.getUsername());
+        }
 
         String jwtToken = jwtTokenService.createToken(userDetail);
         return ResponseEntity.status(HttpStatus.OK).body(JwtTokenResponse.builder()

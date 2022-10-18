@@ -3,6 +3,7 @@ package com.krungsri.service;
 import com.krungsri.MemberType;
 import com.krungsri.exception.InvalidateSalaryLevelException;
 import com.krungsri.mapper.UserMapper;
+import com.krungsri.mapper.UserMapperImpl;
 import com.krungsri.model.RegistrationRequest;
 import com.krungsri.model.RegistrationResponse;
 import com.krungsri.repository.UserEntity;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,13 +29,16 @@ class RegistrationServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Spy
+    private UserMapper userMapper = new UserMapperImpl();
+
     @Mock
-    private UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
 
     @BeforeEach
     void setUp() {
-        this.sut = new RegistrationService(userRepository, userMapper);
+        this.sut = new RegistrationService(userRepository, userMapper, passwordEncoder);
     }
 
     @Test

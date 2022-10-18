@@ -23,14 +23,15 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public RegistrationService(final UserRepository userRepository,
-                               final UserMapper userMapper) {
+                               final UserMapper userMapper,
+                               final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public RegistrationResponse registerUser(final RegistrationRequest registrationRequest) {

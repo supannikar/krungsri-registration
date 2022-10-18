@@ -3,6 +3,7 @@ package com.krungsri.configuration;
 import com.krungsri.jwt.JwtAuthenticationEntryPoint;
 import com.krungsri.jwt.JwtAuthenticationFilter;
 import com.krungsri.service.JwtUserDetailService;
+import org.apache.logging.log4j.core.util.PasswordDecryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,7 +65,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
-
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
